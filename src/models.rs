@@ -1,7 +1,9 @@
 use chrono::NaiveDateTime;
 use diesel::prelude::*;
 use crate::schema::*;
+#[derive(Insertable)]
 #[derive(Queryable)]
+#[diesel(table_name=categories)]
 pub struct Category{
     pub id: i32,
     pub name: String,

@@ -3,5 +3,5 @@ mod schema;
 mod repositories;
 
 fn main() {
-    println!("Hello, world!");
+    println!("Fuck Off");
 }
