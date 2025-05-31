@@ -12,6 +12,7 @@ services:
     build: .
     environment:
       - DATABASE_URL=postgres://${POSTGRES_DB_USER}:${POSTGRES_DB_PSWD}@postgres/${POSTGRES_DB_NAME}
+      - ROCKET_DATABASES={postgres={url=postgres://${POSTGRES_DB_USER}:${POSTGRES_DB_PSWD}@postgres/${POSTGRES_DB_NAME}}}
     ports:
       - "8000:8000"
     volumes:

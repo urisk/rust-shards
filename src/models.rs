@@ -1,8 +1,9 @@
 use chrono::NaiveDateTime;
-use diesel::prelude::*;
+use diesel::{Insertable, Queryable};
+use serde::Serialize;
 use crate::schema::*;
-#[derive(Insertable)]
-#[derive(Queryable)]
+
+#[derive(Queryable, Serialize, Insertable)]
 #[diesel(table_name=categories)]
 pub struct Category{
     pub id: i32,
@@ -11,9 +12,8 @@ pub struct Category{
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Queryable)]
-#[derive(Insertable)]
-pub struct Circle{
+#[derive(Queryable, Serialize, Insertable)]
+pub struct Circle {
     pub id: i32,
     pub name: String,
     pub owner_id: i32,
@@ -21,8 +21,7 @@ pub struct Circle{
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Queryable)]
-#[derive(Insertable)]
+#[derive(Queryable, Serialize, Insertable)]
 pub struct Role{
     pub id: i32,
     pub code: String,
@@ -31,8 +30,7 @@ pub struct Role{
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Queryable)]
-#[derive(Insertable)]
+#[derive(Queryable, Serialize, Insertable)]
 pub struct User{
     pub id: i32,
     pub username: String,
@@ -46,9 +44,7 @@ pub struct User{
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Queryable)]
-#[derive(Insertable)]
-#[diesel(table_name=circle_members)]
+#[derive(Queryable, Serialize, Insertable)]
 pub struct CircleMember{
     pub id: i32,
     pub circle_id: i32,
@@ -57,8 +53,7 @@ pub struct CircleMember{
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Queryable)]
-#[derive(Insertable)]
+#[derive(Queryable, Serialize, Insertable)]
 pub struct Shard{
     pub id: i32,
     pub shard_category: i32,
@@ -72,8 +67,7 @@ pub struct Shard{
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Queryable)]
-#[derive(Insertable)]
+#[derive(Queryable, Serialize, Insertable)]
 pub struct Template{
     pub id: i32,
     pub title: String,
@@ -85,9 +79,7 @@ pub struct Template{
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Queryable)]
-#[derive(Insertable)]
-#[diesel(table_name=user_friends)]
+#[derive(Queryable, Serialize, Insertable)]
 pub struct UserFriend{
     pub id: i32,
     pub user_id: i32,
@@ -96,9 +88,7 @@ pub struct UserFriend{
     pub updated_at: NaiveDateTime,
 }
 
-#[derive(Queryable)]
-#[derive(Insertable)]
-#[diesel(table_name=user_roles)]
+#[derive(Queryable, Serialize, Insertable)]
 pub struct UserRole{
     pub id: i32,
     pub user_id: i32,
@@ -106,4 +96,3 @@ pub struct UserRole{
     pub created_at: NaiveDateTime,
     pub updated_at: NaiveDateTime,
 }
-

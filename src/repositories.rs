@@ -3,7 +3,6 @@ use diesel::QueryResult;
 use diesel_async::{AsyncPgConnection, RunQueryDsl};
 use crate::models::*;
 use crate::schema::*;
-
 pub struct CategoryRepository;
 
 impl CategoryRepository {
