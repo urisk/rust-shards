@@ -171,14 +171,21 @@ impl CircleMemberRepository {
 pub struct ShardRepository;
 
 impl ShardRepository {
+    // pub async fn find(conn: &mut AsyncPgConnection, id: i32) -> QueryResult<Shard> {
+    //     shards::table.find(id).get_result(conn).await
+    // }
+
+    // pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Shard> {
+    //     shards::table.limit(limit).get_result(conn).await
+    // }
     pub async fn find(conn: &mut AsyncPgConnection, id: i32) -> QueryResult<Shard> {
         shards::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Shard> {
-        shards::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<Shard>> {
+        shards::table.limit(limit).load(conn).await
     }
-
+    
     pub async fn create(c: &mut AsyncPgConnection, new_shard: Shard) -> QueryResult<Shard> {
         diesel::insert_into(shards::table)
             .values(new_shard)

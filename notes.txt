@@ -7,3 +7,6 @@ docker-compose exec app diesel setup
 docker-compose exec app diesel migration list
 docker-compose exec app diesel migration generate create_shards
 docker-compose exec app diesel migration run
+docker-compose exec app diesel migration revert
+
+docker-compose exec postgres psql -U urisk -d shards_db -c "SELECT COUNT(*) FROM shards;"

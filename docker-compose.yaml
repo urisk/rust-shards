@@ -6,6 +6,8 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_DB_PSWD}
       - POSTGRES_DB=${POSTGRES_DB_NAME}
     command: ["postgres", "-c", "log-statement=all"]
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
   redis:
     image: redis:latest
   app:
