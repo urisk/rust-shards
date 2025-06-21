@@ -3,7 +3,7 @@ use rocket::response::status::{Custom, NoContent};
 use rocket_db_pools::Connection;
 use rocket::serde::json::{json, Json, Value};
 use crate::DbConn;
-use crate::models::{Category};
+use crate::models::{Category, NewCategory};
 use crate::repositories::CategoryRepository;
 #[rocket::get("/categories")]
 pub async fn get_categories(mut db: Connection<DbConn>) -> Result<Value,Custom<Value>> {
@@ -13,15 +13,15 @@ pub async fn get_categories(mut db: Connection<DbConn>) -> Result<Value,Custom<V
 }
 
 #[rocket::get("/categories/<id>")]
-pub async fn get_category(mut db: Connection<DbConn>, id:i32) -> Result<Value,Custom<Value>> {
+pub async fn view_category(mut db: Connection<DbConn>, id:i32) -> Result<Value,Custom<Value>> {
     CategoryRepository::find(&mut db, id).await
         .map(|categories| json!(categories))
         .map_err(|_| Custom(Status::InternalServerError, json!("Error:")))
 }
 
-#[rocket::post("/categories",format="json", data="<category>")]
-pub async fn create_category(mut db: Connection<DbConn>, category: Json<Category>) -> Result<Custom<Value>,Custom<Value>> {
-    CategoryRepository::create(&mut db,category.into_inner()).await
+#[rocket::post("/categories",format="json", data="<new_category>")]
+pub async fn create_category(mut db: Connection<DbConn>, new_category: Json<NewCategory>) -> Result<Custom<Value>,Custom<Value>> {
+    CategoryRepository::create(&mut db,new_category.into_inner()).await
         .map(|category| Custom(Status::Created, json!(category)))
         .map_err(|_| Custom(Status::InternalServerError, json!("Error:")))
 }

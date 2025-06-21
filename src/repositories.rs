@@ -14,7 +14,7 @@ impl CategoryRepository {
         categories::table.limit(limit).get_result(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_category: Category) -> QueryResult<Category> {
+    pub async fn create(c: &mut AsyncPgConnection, new_category: NewCategory) -> QueryResult<Category> {
         diesel::insert_into(categories::table)
             .values(new_category)
             .get_result(c)
@@ -45,7 +45,7 @@ impl CircleRepository {
         circles::table.limit(limit).get_result(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_circle: Circle) -> QueryResult<Circle> {
+    pub async fn create(c: &mut AsyncPgConnection, new_circle: NewCircle) -> QueryResult<Circle> {
         diesel::insert_into(circles::table)
             .values(new_circle)
             .get_result(c)
@@ -77,7 +77,7 @@ impl RoleRepository {
         roles::table.limit(limit).get_result(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_role: Role) -> QueryResult<Role> {
+    pub async fn create(c: &mut AsyncPgConnection, new_role: NewRole) -> QueryResult<Role> {
         diesel::insert_into(roles::table)
             .values(new_role)
             .get_result(c)
@@ -109,7 +109,7 @@ impl UserRepository {
         users::table.limit(limit).get_result(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_user: User) -> QueryResult<User> {
+    pub async fn create(c: &mut AsyncPgConnection, new_user: NewUser) -> QueryResult<User> {
         diesel::insert_into(users::table)
             .values(new_user)
             .get_result(c)
@@ -146,7 +146,7 @@ impl CircleMemberRepository {
         users::table.limit(limit).get_result(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_circle_member: CircleMember) -> QueryResult<CircleMember> {
+    pub async fn create(c: &mut AsyncPgConnection, new_circle_member: NewCircleMember) -> QueryResult<CircleMember> {
         diesel::insert_into(circle_members::table)
             .values(new_circle_member)
             .get_result(c)
@@ -186,7 +186,7 @@ impl ShardRepository {
         shards::table.limit(limit).load(conn).await
     }
     
-    pub async fn create(c: &mut AsyncPgConnection, new_shard: Shard) -> QueryResult<Shard> {
+    pub async fn create(c: &mut AsyncPgConnection, new_shard: NewShard) -> QueryResult<Shard> {
         diesel::insert_into(shards::table)
             .values(new_shard)
             .get_result(c)
@@ -194,7 +194,6 @@ impl ShardRepository {
     }
     pub async fn update(c: &mut AsyncPgConnection, id: i32, shard: Shard) -> QueryResult<Shard> {
         diesel::update(shards::table.find(id))
-
             .set((
                 shards::shard_category.eq(shard.shard_category),
                 shards::title.eq(shard.title),
@@ -224,7 +223,7 @@ impl UserFriendRepository {
         user_friends::table.limit(limit).get_result(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_user_friend: UserFriend) -> QueryResult<UserFriend> {
+    pub async fn create(c: &mut AsyncPgConnection, new_user_friend: NewUserFriend) -> QueryResult<UserFriend> {
         diesel::insert_into(user_friends::table)
             .values(new_user_friend)
             .get_result(c)
@@ -256,7 +255,7 @@ impl UserRoleRepository {
         user_roles::table.limit(limit).get_result(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_user_role: UserRole) -> QueryResult<UserRole> {
+    pub async fn create(c: &mut AsyncPgConnection, new_user_role: NewUserRole) -> QueryResult<UserRole> {
         diesel::insert_into(user_roles::table)
             .values(new_user_role)
             .get_result(c)
@@ -288,7 +287,7 @@ impl TemplateRepository {
         templates::table.limit(limit).get_result(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_template: Template) -> QueryResult<Template> {
+    pub async fn create(c: &mut AsyncPgConnection, new_template: NewTemplate) -> QueryResult<Template> {
         diesel::insert_into(templates::table)
             .values(new_template)
             .get_result(c)

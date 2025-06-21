@@ -3,8 +3,9 @@ use rocket::response::status::{Custom, NoContent};
 use rocket_db_pools::Connection;
 use rocket::serde::json::{json, Json, Value};
 use crate::DbConn;
-use crate::models::Shard;
+use crate::models::{NewShard, Shard};
 use crate::repositories::ShardRepository;
+use crate::schema::shards::shard;
 //these two alternative functions were generated via AI. I want to keep them around for now,
 //as these have better logging etc, but I don't want to confuse myself by having different
 //methods of doing the same thing.
@@ -46,15 +47,15 @@ pub async fn get_shards(mut db: Connection<DbConn>) -> Result<Value,Custom<Value
 }
 
 #[rocket::get("/shards/<id>")]
-pub async fn get_shard(mut db: Connection<DbConn>, id:i32) -> Result<Value,Custom<Value>> {
+pub async fn view_shard(mut db: Connection<DbConn>, id:i32) -> Result<Value,Custom<Value>> {
     ShardRepository::find(&mut db, id).await
-        .map(|shards| json!(shards))
+        .map(|shard| json!(shard))
         .map_err(|_| Custom(Status::InternalServerError, json!("Error:")))
 }
 
-#[rocket::post("/shards",format="json", data="<shard>")]
-pub async fn create_shard(mut db: Connection<DbConn>, shard: Json<Shard>) -> Result<Custom<Value>,Custom<Value>> {
-    ShardRepository::create(&mut db,shard.into_inner()).await
+#[rocket::post("/shards", format = "json", data = "<shard>")]
+pub async fn create_shard(mut db: Connection<DbConn>, shard: Json<NewShard>) -> Result<Custom<Value>, Custom<Value>> {
+    ShardRepository::create(&mut db, shard.into_inner()).await
         .map(|shard| Custom(Status::Created, json!(shard)))
         .map_err(|_| Custom(Status::InternalServerError, json!("Error:")))
 }
