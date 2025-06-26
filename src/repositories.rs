@@ -10,9 +10,10 @@ impl CategoryRepository {
         categories::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Category> {
-        categories::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<Category>> {
+        categories::table.limit(limit).load(conn).await
     }
+
 
     pub async fn create(c: &mut AsyncPgConnection, new_category: NewCategory) -> QueryResult<Category> {
         diesel::insert_into(categories::table)
@@ -41,8 +42,8 @@ impl CircleRepository {
         circles::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Circle> {
-        circles::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<Circle>> {
+        circles::table.limit(limit).load(conn).await
     }
 
     pub async fn create(c: &mut AsyncPgConnection, new_circle: NewCircle) -> QueryResult<Circle> {
@@ -73,8 +74,8 @@ impl RoleRepository {
         roles::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Role> {
-        roles::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<Role>> {
+        roles::table.limit(limit).load(conn).await
     }
 
     pub async fn create(c: &mut AsyncPgConnection, new_role: NewRole) -> QueryResult<Role> {
@@ -105,8 +106,8 @@ impl UserRepository {
         users::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<User> {
-        users::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<User>> {
+        users::table.limit(limit).load(conn).await
     }
 
     pub async fn create(c: &mut AsyncPgConnection, new_user: NewUser) -> QueryResult<User> {
@@ -142,8 +143,8 @@ impl CircleMemberRepository {
         circle_members::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<User> {
-        users::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<CircleMember>> {
+        circle_members::table.limit(limit).load(conn).await
     }
 
     pub async fn create(c: &mut AsyncPgConnection, new_circle_member: NewCircleMember) -> QueryResult<CircleMember> {
@@ -219,8 +220,8 @@ impl UserFriendRepository {
         user_friends::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<UserFriend> {
-        user_friends::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<UserFriend>> {
+        user_friends::table.limit(limit).load(conn).await
     }
 
     pub async fn create(c: &mut AsyncPgConnection, new_user_friend: NewUserFriend) -> QueryResult<UserFriend> {
@@ -251,8 +252,8 @@ impl UserRoleRepository {
         user_roles::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<UserRole> {
-        user_roles::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<UserRole>> {
+        user_roles::table.limit(limit).load(conn).await
     }
 
     pub async fn create(c: &mut AsyncPgConnection, new_user_role: NewUserRole) -> QueryResult<UserRole> {
