@@ -5,7 +5,6 @@ use rocket::serde::json::{json, Json, Value};
 use crate::DbConn;
 use crate::models::{NewShard, Shard};
 use crate::repositories::ShardRepository;
-use crate::schema::shards::shard;
 //these two alternative functions were generated via AI. I want to keep them around for now,
 //as these have better logging etc, but I don't want to confuse myself by having different
 //methods of doing the same thing.
