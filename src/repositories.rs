@@ -1,8 +1,9 @@
 use diesel::prelude::*;
-use diesel::QueryResult;
-use diesel_async::{AsyncPgConnection, RunQueryDsl};
+use diesel_async::{RunQueryDsl, AsyncPgConnection};
+
 use crate::models::*;
 use crate::schema::*;
+
 pub struct CategoryRepository;
 
 impl CategoryRepository {
@@ -70,6 +71,10 @@ impl CircleRepository {
 pub struct RoleRepository;
 
 impl RoleRepository {
+    pub async fn find_by_code(c: &mut AsyncPgConnection, code: &RoleCode) -> QueryResult<Role> {
+        roles::table.filter(roles::code.eq(code)).first(c).await
+    }
+
     pub async fn find(conn: &mut AsyncPgConnection, id: i32) -> QueryResult<Role> {
         roles::table.find(id).get_result(conn).await
     }
@@ -110,11 +115,32 @@ impl UserRepository {
         users::table.limit(limit).load(conn).await
     }
 
-    pub async fn create(c: &mut AsyncPgConnection, new_user: NewUser) -> QueryResult<User> {
-        diesel::insert_into(users::table)
+    pub async fn create(c: &mut AsyncPgConnection, new_user: NewUser, role_codes: Vec<RoleCode>) -> QueryResult<User> {
+        let user = diesel::insert_into(users::table)
             .values(new_user)
-            .get_result(c)
-            .await
+            .get_result::<User>(c)
+            .await?;
+
+        for role_code in role_codes {
+            let new_user_role = {
+                if let Ok(role) = RoleRepository::find_by_code(c, &role_code).await {
+                    NewUserRole { user_id: user.id, role_id: role.id }
+                } else {
+                    let name = role_code.to_string();
+                    let new_role = NewRole { code: role_code.to_string(), name };
+                    let role = RoleRepository::create(c, new_role).await?;
+                    NewUserRole { user_id: user.id, role_id: role.id }
+                }
+            };
+
+            diesel::insert_into(user_roles::table)
+                .values(new_user_role)
+                .get_result::<UserRole>(c)
+                .await?;
+        }
+
+        Ok(user)
+
     }
     pub async fn update(c: &mut AsyncPgConnection, id: i32, user: User) -> QueryResult<User> {
         diesel::update(users::table.find(id))
@@ -284,8 +310,8 @@ impl TemplateRepository {
         templates::table.find(id).get_result(conn).await
     }
 
-    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Template> {
-        templates::table.limit(limit).get_result(conn).await
+    pub async fn find_multiple(conn: &mut AsyncPgConnection, limit: i64) -> QueryResult<Vec<Template>> {
+        templates::table.limit(limit).load(conn).await
     }
 
     pub async fn create(c: &mut AsyncPgConnection, new_template: NewTemplate) -> QueryResult<Template> {

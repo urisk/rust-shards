@@ -2,7 +2,7 @@ use rocket::http::Status;
 use rocket::response::status::{Custom, NoContent};
 use rocket_db_pools::Connection;
 use rocket::serde::json::{json, Json, Value};
-use crate::DbConn;
+use crate::rocket_routes::DbConn;
 use crate::models::{CircleMember, NewCircleMember};
 use crate::repositories::CircleMemberRepository;
 

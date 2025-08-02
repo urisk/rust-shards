@@ -1,7 +1,33 @@
+use std::io::Write;
+use std::str::FromStr;
+
 use chrono::NaiveDateTime;
-use diesel::{Insertable, Queryable};
-use serde::{Serialize, Deserialize};
+use diesel::serialize::ToSql;
+use diesel::deserialize::FromSql;
+use diesel::pg::{Pg, PgValue};
+use diesel::{prelude::*, deserialize::FromSqlRow};
+use diesel::expression::AsExpression;
+use diesel::sql_types::Text;
 use crate::schema::*;
+use serde::{Serialize, Deserialize};
+
+#[derive(AsExpression, Debug, FromSqlRow)]
+#[diesel(sql_type=Text)]
+pub enum RoleCode {
+    Admin,
+    Editor,
+    Viewer,
+}
+
+impl ToString for RoleCode {
+    fn to_string(&self) -> String {
+        match self {
+            RoleCode::Admin => String::from("admin"),
+            RoleCode::Editor => String::from("editor"),
+            RoleCode::Viewer => String::from("viewer"),
+        }
+    }
+}
 
 #[derive(Queryable, Serialize, Deserialize)]
 #[diesel(table_name=categories)]
@@ -60,6 +86,7 @@ pub struct NewRole{
 }
 
 #[derive(Queryable, Serialize, Deserialize)]
+#[derive(Debug)]
 pub struct User{
     #[serde(skip_deserializing)]
     pub id: i32,
@@ -181,6 +208,9 @@ pub struct NewUserFriend{
 }
 
 #[derive(Queryable, Serialize, Deserialize)]
+#[diesel(table_name=user_roles)]
+#[diesel(belongs_to(User))]
+#[diesel(belongs_to(Role))]
 pub struct UserRole{
     #[serde(skip_deserializing)]
     pub id: i32,

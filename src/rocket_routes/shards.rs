@@ -2,7 +2,7 @@ use rocket::http::Status;
 use rocket::response::status::{Custom, NoContent};
 use rocket_db_pools::Connection;
 use rocket::serde::json::{json, Json, Value};
-use crate::DbConn;
+use crate::rocket_routes::DbConn;
 use crate::models::{NewShard, Shard};
 use crate::repositories::ShardRepository;
 //these two alternative functions were generated via AI. I want to keep them around for now,

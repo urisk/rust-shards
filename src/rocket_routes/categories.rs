@@ -2,9 +2,10 @@ use rocket::http::Status;
 use rocket::response::status::{Custom, NoContent};
 use rocket_db_pools::Connection;
 use rocket::serde::json::{json, Json, Value};
-use crate::DbConn;
 use crate::models::{Category, NewCategory};
 use crate::repositories::CategoryRepository;
+use crate::rocket_routes::DbConn;
+
 #[rocket::get("/categories")]
 pub async fn get_categories(mut db: Connection<DbConn>) -> Result<Value,Custom<Value>> {
     CategoryRepository::find_multiple(&mut db,100).await
